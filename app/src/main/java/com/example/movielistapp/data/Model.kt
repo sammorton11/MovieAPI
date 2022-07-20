@@ -6,6 +6,4 @@ data class Model (
     val category: String,
     val desc: String,
     var expand : Boolean = false
-) {
-
-}
+)
