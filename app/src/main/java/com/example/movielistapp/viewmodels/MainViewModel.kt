@@ -25,9 +25,4 @@ class MainViewModel(private val repository: MainRepository): ViewModel() {
             }
         })
     }
-
-
-    fun setUpDesc(description: TextView?, desc: String?){
-        description?.text = desc
-    }
 }
