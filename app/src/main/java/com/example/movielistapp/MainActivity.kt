@@ -20,15 +20,13 @@ import com.example.movielistapp.viewmodels.MainViewModel
 // setup view model -- live data - view model factory
 // set up UI
 
-//TODO: create model class -> https://howtodoandroid.com/mvvm-retrofit-recyclerview-kotlin/
+class MainActivity : AppCompatActivity() {
 
-class MainActivity : AppCompatActivity(), MovieClickInterface {
-
-    private val TAG = "MainActivity"
+    private val tag = "MainActivity"
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
     private val retrofitService = RetrofitService.getInstance()
-    private val adapter = MainAdapter(this)
+    private val adapter = MainAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,23 +35,18 @@ class MainActivity : AppCompatActivity(), MovieClickInterface {
         setContentView(binding.root)
 
 
-        viewModel = ViewModelProvider(this, MainViewModelFactory(MainRepository(retrofitService))).get(MainViewModel::class.java)
+        viewModel =
+            ViewModelProvider(this, MainViewModelFactory(MainRepository(retrofitService))).get(
+                MainViewModel::class.java
+            )
         binding.recyclerview.adapter = adapter
         viewModel.movieList.observe(this) {
-            Log.d(TAG, "onCreate: $it")
+            Log.d(tag, "onCreate: $it")
             adapter.setMovieList(it)
         }
-        viewModel.errorMessage.observe(this, Observer {
-        })
+        viewModel.errorMessage.observe(this) {
+        }
         viewModel.getAllMovies()
     }
 
-    private fun openMovieDescriptionPage(movie: Model) {
-        val intent = Intent(this@MainActivity, MovieDescriptionActivity::class.java)
-        startActivity(intent)
-    }
-
-    override fun onMovieClick(movie: Model) {
-        openMovieDescriptionPage(movie)
-    }
 }

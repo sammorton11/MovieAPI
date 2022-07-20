@@ -10,9 +10,9 @@ import com.bumptech.glide.Glide
 import com.example.movielistapp.data.Model
 import com.example.movielistapp.databinding.AdapterMovieBinding
 
-class MainAdapter(private val movieClickInterface: MovieClickInterface): RecyclerView.Adapter<MainViewHolder>() {
-    var movies = mutableListOf<Model>()
+class MainAdapter(): RecyclerView.Adapter<MainViewHolder>() {
 
+    private var movies = mutableListOf<Model>()
 
     @SuppressLint("NotifyDataSetChanged")
     fun setMovieList(movies: List<Model>) {
@@ -24,6 +24,7 @@ class MainAdapter(private val movieClickInterface: MovieClickInterface): Recycle
         val binding = AdapterMovieBinding.inflate(inflater, parent, false)
         return MainViewHolder(binding)
     }
+    @SuppressLint("NotifyDataSetChanged")
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
         val movie = movies[position]
         holder.binding.name.text = movie.name
@@ -31,11 +32,7 @@ class MainAdapter(private val movieClickInterface: MovieClickInterface): Recycle
         holder.binding.description.text = movie.desc
         Glide.with(holder.itemView.context).load(movie.imageUrl).into(holder.binding.imageview)
 
-//        holder.itemView.descriptionTextView.text = movie.desc
-
         holder.binding.expandedView.visibility = if (movie.expand) View.VISIBLE else View.GONE
-        // on Click of the item take parent card view in our case
-        // revert the boolean "expand"
         holder.binding.cardLayout.setOnClickListener {
             movie.expand = !movie.expand
             notifyDataSetChanged()
@@ -45,12 +42,4 @@ class MainAdapter(private val movieClickInterface: MovieClickInterface): Recycle
         return movies.size
     }
 }
-class MainViewHolder(val binding: AdapterMovieBinding) : RecyclerView.ViewHolder(binding.root) {
-
-
-}
-
-interface MovieClickInterface {
-    // creating a method for updating recycler view item
-    fun onMovieClick(movie: Model)
-}
+class MainViewHolder(val binding: AdapterMovieBinding) : RecyclerView.ViewHolder(binding.root) {}
