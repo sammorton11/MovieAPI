@@ -1,5 +1,7 @@
 package com.example.movielistapp.data
 
-class MainRepository(private val retrofitService: RetrofitService) {
+import javax.inject.Inject
+
+class MainRepository @Inject constructor(private val retrofitService: RetrofitService) {
     fun getAllMovies() = retrofitService.getAllMovies()
 }

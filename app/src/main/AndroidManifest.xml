@@ -12,13 +12,10 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:name=".HIltApplication"
         android:supportsRtl="true"
         android:theme="@style/Theme.MovieListApp"
         tools:targetApi="31">
-        <activity
-            android:name=".MovieDescriptionActivity"
-            android:parentActivityName=".MainActivity"
-            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

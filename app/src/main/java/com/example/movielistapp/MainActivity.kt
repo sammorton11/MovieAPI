@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.movielistapp.data.MainRepository
@@ -12,6 +13,8 @@ import com.example.movielistapp.data.RetrofitService
 import com.example.movielistapp.databinding.ActivityMainBinding
 import com.example.movielistapp.factory.MainViewModelFactory
 import com.example.movielistapp.viewmodels.MainViewModel
+import dagger.hilt.EntryPoint
+import dagger.hilt.android.AndroidEntryPoint
 
 //Steps:
 // add dependencies
@@ -20,13 +23,13 @@ import com.example.movielistapp.viewmodels.MainViewModel
 // setup view model -- live data - view model factory
 // set up UI
 
-class MainActivity : AppCompatActivity() {
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity(), ItemClickListener {
 
     private val tag = "MainActivity"
     private lateinit var binding: ActivityMainBinding
-    private lateinit var viewModel: MainViewModel
-    private val retrofitService = RetrofitService.getInstance()
-    private val adapter = MainAdapter()
+    private val adapter = MainAdapter(this)
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,12 +37,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-        viewModel =
-            ViewModelProvider(this, MainViewModelFactory(MainRepository(retrofitService))).get(
-                MainViewModel::class.java
-            )
         binding.recyclerview.adapter = adapter
+
         viewModel.movieList.observe(this) {
             Log.d(tag, "onCreate: $it")
             adapter.setMovieList(it)
@@ -47,6 +46,15 @@ class MainActivity : AppCompatActivity() {
         viewModel.errorMessage.observe(this) {
         }
         viewModel.getAllMovies()
+
+
+
+    }
+
+    override fun itemClicked(expanded: Boolean, position: Int) {
+        if (expanded){
+           binding.recyclerview.layoutManager?.scrollToPosition(position)
+        }
     }
 
 }
